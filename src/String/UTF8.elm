@@ -1,12 +1,13 @@
 module String.UTF8 exposing (foldl, length, toBytes, toString)
 
-{-|
-
-@docs foldl, length, toBytes, toString
+{-| Need UTF-8 bytes for your algorithm? Don't want to waste time investigating
+how to go back and forth between UTF-16 and UTF-8? I hear ya.
 
 Examples in the documentation assume an import like this:
 
     import String.UTF8 as UTF8
+
+@docs length, toBytes, toString, foldl
 
 -}
 

@@ -1,12 +1,13 @@
 module String.UTF32 exposing (byteToString, foldl, foldlUTF8, length, toBytes, toString)
 
-{-|
-
-@docs byteToString, foldl, foldlUTF8, length, toBytes, toString
+{-| Need to work in unicode codepoints? Tired of UTF-8's silliness? You came to
+the right place!
 
 Examples in the documentation assume an import like this:
 
     import String.UTF32 as UTF32
+
+@docs length, toBytes, toString, byteToString, foldl, foldlUTF8
 
 -}
 

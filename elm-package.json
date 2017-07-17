@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
+    "summary": "Convert between unicode codepoints/UTF32, UTF-16 and UTF-8.",
+    "repository": "https://github.com/zwilias/elm-utf-tools.git",
     "license": "BSD3",
     "source-directories": [
         "src"
