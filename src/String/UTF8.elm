@@ -1,24 +1,71 @@
 module String.UTF8 exposing (foldl, length, toBytes, toString)
 
+{-|
+
+@docs foldl, length, toBytes, toString
+
+Examples in the documentation assume an import like this:
+
+    import String.UTF8 as UTF8
+
+-}
+
 import Bitwise exposing (and, or, shiftLeftBy, shiftRightZfBy)
 import String.UTF32 as UTF32 exposing (foldlUTF8)
 
 
+{-| Convert a sequence of UTF-8 bytes to an Elm UTF-16 `String`.
+
+    UTF8.toString [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]
+    --> Ok "hello"
+
+    UTF8.toString [ 0xF0, 0x9F, 0x92, 0xA9 ]
+    --> Ok "💩"
+
+If the input is not a valid UTF-8 sequence, you'll receive an error.
+
+    UTF8.toString [ 0xF0]
+    --> Err "invalid UTF-8 sequence"
+
+-}
 toString : List Int -> Result String String
 toString input =
     foldlUTF8 (\char string -> string ++ UTF32.byteToString char) "" input
 
 
+{-| Convert a `String` to a sequence of UTF-8 bytes. The inverse of `toString`.
+
+    UTF8.toBytes "✓ a-ok"
+    --> [ 0xe2, 0x9c, 0x93, 0x20, 0x61, 0x2D, 0x6F, 0x6B ]
+
+-}
 toBytes : String -> List Int
 toBytes input =
     foldl (::) [] input |> List.reverse
 
 
+{-| Fold over a string, left to right, accumulating UTF-8 bytes along the way.
+-}
 foldl : (Int -> a -> a) -> a -> String -> a
 foldl op acc input =
     UTF32.foldl (utf32ToUtf8 op) acc input
 
 
+{-| Number of UTF-8 codepoints in a string.
+
+    UTF8.length "a"
+    --> 1
+
+    UTF8.length "à"
+    --> 2
+
+    UTF8.length "✓"
+    --> 3
+
+    UTF8.length "💩"
+    --> 4
+
+-}
 length : String -> Int
 length input =
     foldl (always <| (+) 1) 0 input

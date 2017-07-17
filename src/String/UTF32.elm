@@ -1,24 +1,63 @@
 module String.UTF32 exposing (byteToString, foldl, foldlUTF8, length, toBytes, toString)
 
+{-|
+
+@docs byteToString, foldl, foldlUTF8, length, toBytes, toString
+
+Examples in the documentation assume an import like this:
+
+    import String.UTF32 as UTF32
+
+-}
+
 import Bitwise exposing (and, or, shiftLeftBy, shiftRightZfBy)
 import Char
 
 
+{-| Build an UTF-16 `String` from a list of unicode codepoints.
+
+    UTF32.toString [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]
+    --> "hello"
+
+    UTF32.toString [ 0x0001F4A9 ]
+    --> "💩"
+
+-}
 toString : List Int -> String
 toString bytes =
     List.foldl (\char string -> string ++ byteToString char) "" bytes
 
 
+{-| Calculates the number UTF-32 characters in a `String`.
+
+    String.length "💩"
+    --> 2
+
+    UTF32.length "💩"
+    --> 1
+
+-}
 length : String -> Int
 length input =
     foldl (always <| (+) 1) 0 input
 
 
+{-| Converts a String to a list of unicode codepoints. The inverse of `toString`
+
+    UTF32.toBytes "hello"
+    --> [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]
+
+    UTF32.toBytes "💩"
+    --> [ 0x0001F4A9 ]
+
+-}
 toBytes : String -> List Int
 toBytes =
     foldl (::) [] >> List.reverse
 
 
+{-| Fold over a string, left to right, accumulating unicode codepoints.
+-}
 foldl : (Int -> a -> a) -> a -> String -> a
 foldl op acc input =
     String.foldl (Char.toCode >> utf16ToUtf32 op) ( acc, Nothing ) input
@@ -49,6 +88,10 @@ utf16ToUtf32 add char ( acc, combine ) =
             )
 
 
+{-| Fold over a list of UTF-8 bytes, converting them to unicode codepoints and
+feeding those to your accumulator. If the input contains invalid sequences,
+you'll receive an `invalid UTF-8 sequence` error.
+-}
 foldlUTF8 : (Int -> a -> a) -> a -> List Int -> Result String a
 foldlUTF8 op acc input =
     case List.foldl (utf8ToUtf32 op) ( 0, 0, acc ) input of
@@ -56,7 +99,7 @@ foldlUTF8 op acc input =
             Ok res
 
         _ ->
-            Err "invalid bytes"
+            Err "invalid UTF-8 sequence"
 
 
 utf8ToUtf32 : (Int -> a -> a) -> Int -> UTF8Acc a -> UTF8Acc a
@@ -86,6 +129,12 @@ type alias UTF8Acc a =
     ( Int, Int, a )
 
 
+{-| Convert a single codepoint to the equivalent Elm string.
+
+    byteToString 0x0001F4A9
+    --> "💩"
+
+-}
 byteToString : Int -> String
 byteToString int =
     if int <= 0x00010000 then
