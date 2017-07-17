@@ -1,28 +1,12 @@
 module String.UTF8 exposing (foldl, length, toBytes, toString)
 
 import Bitwise exposing (and, or, shiftLeftBy, shiftRightZfBy)
-import Char
 import String.UTF32 as UTF32 exposing (foldlUTF8)
 
 
 toString : List Int -> Result String String
 toString input =
-    foldlUTF8 (\char string -> string ++ intToString char) "" input
-
-
-intToString : Int -> String
-intToString int =
-    if int <= 0x00010000 then
-        Char.fromCode int |> String.fromChar
-    else
-        let
-            c =
-                int - 0x00010000
-        in
-        [ Char.fromCode (shiftRightZfBy 10 c |> or 0xD800)
-        , Char.fromCode (and 0x03FF c |> or 0xDC00)
-        ]
-            |> String.fromList
+    foldlUTF8 (\char string -> string ++ UTF32.byteToString char) "" input
 
 
 toBytes : String -> List Int

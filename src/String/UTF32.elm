@@ -1,7 +1,17 @@
-module String.UTF32 exposing (foldl, foldlUTF8, toBytes)
+module String.UTF32 exposing (byteToString, foldl, foldlUTF8, length, toBytes, toString)
 
-import Bitwise exposing (and, or, shiftLeftBy)
+import Bitwise exposing (and, or, shiftLeftBy, shiftRightZfBy)
 import Char
+
+
+toString : List Int -> String
+toString bytes =
+    List.foldl (\char string -> string ++ byteToString char) "" bytes
+
+
+length : String -> Int
+length input =
+    foldl (always <| (+) 1) 0 input
 
 
 toBytes : String -> List Int
@@ -74,3 +84,18 @@ utf8ToUtf32 add char ( curr, need, acc ) =
 
 type alias UTF8Acc a =
     ( Int, Int, a )
+
+
+byteToString : Int -> String
+byteToString int =
+    if int <= 0x00010000 then
+        Char.fromCode int |> String.fromChar
+    else
+        let
+            c =
+                int - 0x00010000
+        in
+        [ Char.fromCode (shiftRightZfBy 10 c |> or 0xD800)
+        , Char.fromCode (and 0x03FF c |> or 0xDC00)
+        ]
+            |> String.fromList
