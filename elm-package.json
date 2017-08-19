@@ -1,12 +1,15 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "summary": "Convert between unicode codepoints/UTF32, UTF-16 and UTF-8.",
     "repository": "https://github.com/zwilias/elm-utf-tools.git",
     "license": "BSD3",
     "source-directories": [
         "src"
     ],
-    "exposed-modules": ["String.UTF32", "String.UTF8"],
+    "exposed-modules": [
+        "String.UTF32",
+        "String.UTF8"
+    ],
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0"
     },
