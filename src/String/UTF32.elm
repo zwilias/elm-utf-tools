@@ -61,7 +61,8 @@ toBytes =
 -}
 foldl : (Int -> a -> a) -> a -> String -> a
 foldl op acc input =
-    String.foldl (Char.toCode >> utf16ToUtf32 op) ( acc, Nothing ) input
+    input
+        |> String.foldl (Char.toCode >> utf16ToUtf32 op) ( acc, Nothing )
         |> Tuple.first
 
 
@@ -75,6 +76,7 @@ utf16ToUtf32 add char ( acc, combine ) =
         Nothing ->
             if char >= 0xD800 && char < 0xE000 then
                 ( acc, Just char )
+
             else
                 ( add char acc, Nothing )
 
@@ -84,7 +86,7 @@ utf16ToUtf32 add char ( acc, combine ) =
                 |> shiftLeftBy 10
                 |> or (and 0x03FF char)
                 |> (+) 0x00010000
-                |> flip add acc
+                |> (\x -> add x acc)
             , Nothing
             )
 
@@ -114,14 +116,19 @@ utf8ToUtf32 add char ( curr, need, acc ) =
     if need == 0 then
         if and 0x80 char == 0 then
             ( 0, 0, add char acc )
+
         else if and 0xE0 char == 0xC0 then
             ( and 0x1F char, 1, acc )
+
         else if and 0xF0 char == 0xE0 then
             ( and 0x0F char, 2, acc )
+
         else
             ( and 7 char, 3, acc )
+
     else if need == 1 then
         ( 0, 0, add (shiftAndAdd char) acc )
+
     else
         ( shiftAndAdd char, need - 1, acc )
 
@@ -140,6 +147,7 @@ byteToString : Int -> String
 byteToString int =
     if int <= 0x00010000 then
         Char.fromCode int |> String.fromChar
+
     else
         let
             c =

@@ -80,15 +80,18 @@ utf32ToUtf8 : (Int -> a -> a) -> Int -> a -> a
 utf32ToUtf8 add char acc =
     if char < 0x80 then
         acc |> add char
+
     else if char < 0x0800 then
         acc
             |> add (or 0xC0 <| shiftRightZfBy 6 char)
             |> add (or 0x80 <| and 0x3F char)
+
     else if char < 0x00010000 then
         acc
             |> add (or 0xE0 <| shiftRightZfBy 12 char)
             |> add (or 0x80 <| and 0x3F <| shiftRightZfBy 6 char)
             |> add (or 0x80 <| and 0x3F char)
+
     else
         acc
             |> add (or 0xF0 <| shiftRightZfBy 18 char)
