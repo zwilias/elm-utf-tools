@@ -1,4 +1,4 @@
-module String.UTF8 exposing (foldl, length, toBytes, toString)
+module String.UTF8 exposing (length, toBytes, toString, foldl)
 
 {-| Need UTF-8 bytes for your algorithm? Don't want to waste time investigating
 how to go back and forth between UTF-32 and UTF-8? I hear ya.

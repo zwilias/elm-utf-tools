@@ -1,4 +1,4 @@
-module String.UTF16 exposing (foldl, length, toBytes, toString)
+module String.UTF16 exposing (length, toBytes, toString, foldl)
 
 {-| For some reason want to reason about strings as if they were UTF-16
 sequences?
@@ -29,6 +29,7 @@ utf32ToUtf16Bytes op char acc =
     in
     if int <= 0x00010000 then
         op int acc
+
     else
         let
             c =
@@ -75,6 +76,7 @@ utf16ToUtf32 char ( acc, combine ) =
         Nothing ->
             if char >= 0xD800 && char < 0xE000 then
                 ( acc, Just char )
+
             else
                 ( acc ++ utf32ByteToString char, Nothing )
 

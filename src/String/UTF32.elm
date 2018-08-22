@@ -1,4 +1,4 @@
-module String.UTF32 exposing (foldl, length, toBytes, toString)
+module String.UTF32 exposing (length, toBytes, toString, foldl)
 
 {-| Need to work in unicode codepoints? Tired of UTF-8's silliness? You came to
 the right place!
