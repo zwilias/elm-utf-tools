@@ -1,3 +1,3 @@
-elm-stuff/
-node-modules
-tests/Doc
+/elm-stuff
+/node_modules
+/tests/VerifyExamples

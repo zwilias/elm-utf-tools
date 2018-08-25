@@ -3,10 +3,6 @@ module String.UTF8 exposing (length, toBytes, toString, foldl)
 {-| Need UTF-8 bytes for your algorithm? Don't want to waste time investigating
 how to go back and forth between UTF-32 and UTF-8? I hear ya.
 
-Examples in the documentation assume an import like this:
-
-    import String.UTF8 as UTF8
-
 @docs length, toBytes, toString, foldl
 
 -}
@@ -16,6 +12,8 @@ import String.UTF32 as UTF32
 
 
 {-| Convert a sequence of UTF-8 bytes to an Elm `String`.
+
+    import String.UTF8 as UTF8
 
     UTF8.toString [ 0x68, 0x65, 0x6C, 0x6C, 0x6F ]
     --> Ok "hello"
@@ -83,6 +81,8 @@ type alias UTF8Acc a =
 
 {-| Convert a `String` to a sequence of UTF-8 bytes. The inverse of `toString`.
 
+    import String.UTF8 as UTF8
+
     UTF8.toBytes "✓ a-ok"
     --> [ 0xe2, 0x9c, 0x93, 0x20, 0x61, 0x2D, 0x6F, 0x6B ]
 
@@ -107,6 +107,8 @@ foldl op initialAcc input =
 
 
 {-| Number of UTF-8 codepoints in a string.
+
+    import String.UTF8 as UTF8
 
     UTF8.length "a"
     --> 1
