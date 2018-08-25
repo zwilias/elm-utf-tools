@@ -1,4 +1,4 @@
 {
   "root": "../src",
-  "tests": ["String.UTF32", "String.UTF8"]
+  "tests": ["String.UTF8", "String.UTF16", "String.UTF32"]
 }

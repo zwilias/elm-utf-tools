@@ -1,4 +1,4 @@
-module UTF32Test exposing (..)
+module UTF32Test exposing (cases, lengthTest, toBytesTest, toStringTest)
 
 import Expect exposing (Expectation)
 import String.UTF32 as UTF32
